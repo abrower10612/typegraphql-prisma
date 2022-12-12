@@ -1,0 +1,31 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator typegraphql {
+  provider = "typegraphql-prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       Int    @id @default(autoincrement())
+  email    String @unique
+  password String
+  name     String
+  tasks    Task[]
+}
+
+model Task {
+  id          Int     @id @default(autoincrement())
+  title       String
+  description String?
+  owner       User    @relation(fields: [ownerId], references: [id])
+  ownerId     Int
+  status      String  @default("INCOMPLETE")
+
+  @@unique([ownerId, title])
+}
