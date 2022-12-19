@@ -1,12 +1,4 @@
-import {
-  Arg,
-  Ctx,
-  Field,
-  InputType,
-  Mutation,
-  Query,
-  Resolver,
-} from 'type-graphql';
+import { Arg, Ctx, Mutation, Query, Resolver } from 'type-graphql';
 import { Context } from '../context';
 import TaskCreateInput from '../entities/task/create/TaskCreateInput';
 import Task from '../entities/task/Task';

@@ -7,10 +7,10 @@ export interface AuthContext {
   req: Request;
 }
 
-export interface MyContext {
+export interface Context {
   prisma: PrismaClient;
 }
 
-export const context: MyContext = {
+export const context: Context = {
   prisma: prisma,
 };
