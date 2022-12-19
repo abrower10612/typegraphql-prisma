@@ -6,6 +6,8 @@ import { context } from './context';
 import TaskResolver from './resolvers/TaskResolver';
 import UserResolver from './resolvers/UserResolver';
 import * as jwt from 'express-jwt';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const main = async () => {
   const app = express();
