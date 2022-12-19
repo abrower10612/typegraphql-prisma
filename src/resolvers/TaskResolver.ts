@@ -8,38 +8,10 @@ import {
   Resolver,
 } from 'type-graphql';
 import { Context } from '../context';
-import Task from '../entities/Task';
-import { findOneUser } from '../utils/users';
-
-/**
- * input fields for creating a task
- */
-@InputType()
-export class TaskCreateInput {
-  @Field()
-  title!: string;
-
-  @Field({ nullable: true })
-  description?: string;
-
-  @Field()
-  ownerId!: number;
-}
-
-/**
- * input fields for updating status of a task
- */
-@InputType()
-export class TaskStatusInput {
-  @Field()
-  id!: number;
-
-  @Field()
-  ownerId!: number;
-
-  @Field({ nullable: true })
-  status?: 'COMPLETE' | 'INCOMPLETE';
-}
+import TaskCreateInput from '../entities/task/create/TaskCreateInput';
+import Task from '../entities/task/Task';
+import TaskStatusInput from '../entities/task/update/TaskStatusInput';
+import User from '../entities/user/User';
 
 @Resolver()
 export default class TaskResolver {
@@ -51,7 +23,7 @@ export default class TaskResolver {
    */
   @Query(() => [Task])
   async getTasks(@Arg('ownerId') ownerId: number, @Ctx() ctx: Context) {
-    const owner = await findOneUser(ownerId);
+    const owner = await new User().findOne(ownerId);
 
     return ctx.prisma.task.findMany({
       where: {
@@ -71,7 +43,7 @@ export default class TaskResolver {
     @Arg('ownerId') ownerId: number,
     @Ctx() ctx: Context
   ) {
-    const owner = await findOneUser(ownerId);
+    const owner = await new User().findOne(ownerId);
 
     return ctx.prisma.task.findMany({
       where: {
@@ -89,7 +61,7 @@ export default class TaskResolver {
    */
   @Query(() => [Task])
   async getCompleteTasks(@Arg('ownerId') ownerId: number, @Ctx() ctx: Context) {
-    const owner = await findOneUser(ownerId);
+    const owner = await new User().findOne(ownerId);
 
     return ctx.prisma.task.findMany({
       where: {
@@ -107,7 +79,7 @@ export default class TaskResolver {
    */
   @Mutation(() => Task)
   async createTask(@Arg('data') data: TaskCreateInput, @Ctx() ctx: Context) {
-    const owner = await findOneUser(data.ownerId);
+    const owner = await new User().findOne(data.ownerId);
 
     return ctx.prisma.task.create({
       data: {
@@ -129,7 +101,7 @@ export default class TaskResolver {
     @Arg('data') data: TaskStatusInput,
     @Ctx() ctx: Context
   ) {
-    const owner = await findOneUser(data.ownerId);
+    const owner = await new User().findOne(data.ownerId);
 
     const task = await ctx.prisma.task.findFirstOrThrow({
       where: {

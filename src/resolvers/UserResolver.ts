@@ -1,34 +1,8 @@
-import {
-  Arg,
-  Ctx,
-  Field,
-  InputType,
-  Mutation,
-  Query,
-  Resolver,
-} from 'type-graphql';
-import { Context } from '../context';
-import User from '../entities/User';
 import bcrypt from 'bcryptjs';
-import { TaskCreateInput } from './TaskResolver';
-
-/**
- * input fields for creating a user
- */
-@InputType()
-class UserCreateInput {
-  @Field()
-  email!: string;
-
-  @Field()
-  password!: string;
-
-  @Field()
-  name!: string;
-
-  @Field(() => [TaskCreateInput])
-  tasks!: [TaskCreateInput];
-}
+import { Arg, Ctx, Mutation, Query, Resolver } from 'type-graphql';
+import { Context } from '../context';
+import RegisterInput from '../entities/user/register/registerInput';
+import User from '../entities/user/User';
 
 @Resolver()
 export default class UserResolver {
@@ -64,7 +38,7 @@ export default class UserResolver {
    * @returns
    */
   @Mutation(() => User)
-  async createUser(@Arg('data') data: UserCreateInput, @Ctx() ctx: Context) {
+  async createUser(@Arg('data') data: RegisterInput, @Ctx() ctx: Context) {
     const passwordHash = await bcrypt.hash(data.password, 10);
 
     return ctx.prisma.user.create({

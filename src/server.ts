@@ -5,9 +5,11 @@ import { buildSchema } from 'type-graphql';
 import { context } from './context';
 import TaskResolver from './resolvers/TaskResolver';
 import UserResolver from './resolvers/UserResolver';
+import * as jwt from 'express-jwt';
 
 const main = async () => {
   const app = express();
+  const path = '/graphql';
 
   const schema = await buildSchema({
     resolvers: [UserResolver, TaskResolver],
@@ -15,7 +17,17 @@ const main = async () => {
   });
 
   const apolloServer = new ApolloServer({ schema, context });
-  apolloServer.applyMiddleware({ app });
+
+  app.use(
+    '/graphql',
+    jwt.expressjwt({
+      secret: 'TypeGraphQL',
+      credentialsRequired: false,
+      algorithms: ['RS256'],
+    })
+  );
+
+  apolloServer.applyMiddleware({ app, path });
 
   app.listen(5000, () => {
     console.log('server running on http://localhost:5000/graphql');

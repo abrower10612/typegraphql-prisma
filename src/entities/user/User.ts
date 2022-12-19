@@ -1,6 +1,7 @@
 import { IsEmail } from 'class-validator';
 import { Field, ID, ObjectType } from 'type-graphql';
-import Task from './Task';
+import { context } from '../../context';
+import Task from '../task/Task';
 
 @ObjectType()
 export default class User {
@@ -18,5 +19,13 @@ export default class User {
   name!: string;
 
   @Field(() => [Task], { nullable: true })
-  tasks!: Task[];
+  tasks?: Task[];
+
+  public async findOne(id: number) {
+    return await context.prisma.user.findFirstOrThrow({
+      where: {
+        id,
+      },
+    });
+  }
 }
