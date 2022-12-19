@@ -15,52 +15,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TaskStatusInput = exports.TaskCreateInput = void 0;
 const type_graphql_1 = require("type-graphql");
-const Task_1 = __importDefault(require("../entities/Task"));
-const users_1 = require("../utils/users");
-/**
- * input fields for creating a task
- */
-let TaskCreateInput = class TaskCreateInput {
-};
-__decorate([
-    (0, type_graphql_1.Field)(),
-    __metadata("design:type", String)
-], TaskCreateInput.prototype, "title", void 0);
-__decorate([
-    (0, type_graphql_1.Field)({ nullable: true }),
-    __metadata("design:type", String)
-], TaskCreateInput.prototype, "description", void 0);
-__decorate([
-    (0, type_graphql_1.Field)(),
-    __metadata("design:type", Number)
-], TaskCreateInput.prototype, "ownerId", void 0);
-TaskCreateInput = __decorate([
-    (0, type_graphql_1.InputType)()
-], TaskCreateInput);
-exports.TaskCreateInput = TaskCreateInput;
-/**
- * input fields for updating status of a task
- */
-let TaskStatusInput = class TaskStatusInput {
-};
-__decorate([
-    (0, type_graphql_1.Field)(),
-    __metadata("design:type", Number)
-], TaskStatusInput.prototype, "id", void 0);
-__decorate([
-    (0, type_graphql_1.Field)(),
-    __metadata("design:type", Number)
-], TaskStatusInput.prototype, "ownerId", void 0);
-__decorate([
-    (0, type_graphql_1.Field)({ nullable: true }),
-    __metadata("design:type", String)
-], TaskStatusInput.prototype, "status", void 0);
-TaskStatusInput = __decorate([
-    (0, type_graphql_1.InputType)()
-], TaskStatusInput);
-exports.TaskStatusInput = TaskStatusInput;
+const TaskCreateInput_1 = __importDefault(require("../entities/task/create/TaskCreateInput"));
+const Task_1 = __importDefault(require("../entities/task/Task"));
+const TaskStatusInput_1 = __importDefault(require("../entities/task/update/TaskStatusInput"));
+const User_1 = __importDefault(require("../entities/user/User"));
 let TaskResolver = class TaskResolver {
     /**
      * get all tasks for speciic user
@@ -69,7 +28,7 @@ let TaskResolver = class TaskResolver {
      * @returns
      */
     async getTasks(ownerId, ctx) {
-        const owner = await (0, users_1.findOneUser)(ownerId);
+        const owner = await new User_1.default().findOne(ownerId);
         return ctx.prisma.task.findMany({
             where: {
                 owner,
@@ -83,7 +42,7 @@ let TaskResolver = class TaskResolver {
      * @returns
      */
     async getIncompleteTasks(ownerId, ctx) {
-        const owner = await (0, users_1.findOneUser)(ownerId);
+        const owner = await new User_1.default().findOne(ownerId);
         return ctx.prisma.task.findMany({
             where: {
                 owner,
@@ -98,7 +57,7 @@ let TaskResolver = class TaskResolver {
      * @returns
      */
     async getCompleteTasks(ownerId, ctx) {
-        const owner = await (0, users_1.findOneUser)(ownerId);
+        const owner = await new User_1.default().findOne(ownerId);
         return ctx.prisma.task.findMany({
             where: {
                 owner,
@@ -113,7 +72,7 @@ let TaskResolver = class TaskResolver {
      * @returns
      */
     async createTask(data, ctx) {
-        const owner = await (0, users_1.findOneUser)(data.ownerId);
+        const owner = await new User_1.default().findOne(data.ownerId);
         return ctx.prisma.task.create({
             data: {
                 title: data.title,
@@ -129,7 +88,7 @@ let TaskResolver = class TaskResolver {
      * @returns
      */
     async toggleTaskStatus(data, ctx) {
-        const owner = await (0, users_1.findOneUser)(data.ownerId);
+        const owner = await new User_1.default().findOne(data.ownerId);
         const task = await ctx.prisma.task.findFirstOrThrow({
             where: {
                 id: data.id,
@@ -175,7 +134,7 @@ __decorate([
     __param(0, (0, type_graphql_1.Arg)('data')),
     __param(1, (0, type_graphql_1.Ctx)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [TaskCreateInput, Object]),
+    __metadata("design:paramtypes", [TaskCreateInput_1.default, Object]),
     __metadata("design:returntype", Promise)
 ], TaskResolver.prototype, "createTask", null);
 __decorate([
@@ -183,7 +142,7 @@ __decorate([
     __param(0, (0, type_graphql_1.Arg)('data')),
     __param(1, (0, type_graphql_1.Ctx)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [TaskStatusInput, Object]),
+    __metadata("design:paramtypes", [TaskStatusInput_1.default, Object]),
     __metadata("design:returntype", Promise)
 ], TaskResolver.prototype, "toggleTaskStatus", null);
 TaskResolver = __decorate([

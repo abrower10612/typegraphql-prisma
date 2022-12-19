@@ -15,34 +15,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const type_graphql_1 = require("type-graphql");
-const User_1 = __importDefault(require("../entities/User"));
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
-const TaskResolver_1 = require("./TaskResolver");
-/**
- * input fields for creating a user
- */
-let UserCreateInput = class UserCreateInput {
-};
-__decorate([
-    (0, type_graphql_1.Field)(),
-    __metadata("design:type", String)
-], UserCreateInput.prototype, "email", void 0);
-__decorate([
-    (0, type_graphql_1.Field)(),
-    __metadata("design:type", String)
-], UserCreateInput.prototype, "password", void 0);
-__decorate([
-    (0, type_graphql_1.Field)(),
-    __metadata("design:type", String)
-], UserCreateInput.prototype, "name", void 0);
-__decorate([
-    (0, type_graphql_1.Field)(() => [TaskResolver_1.TaskCreateInput]),
-    __metadata("design:type", Array)
-], UserCreateInput.prototype, "tasks", void 0);
-UserCreateInput = __decorate([
-    (0, type_graphql_1.InputType)()
-], UserCreateInput);
+const type_graphql_1 = require("type-graphql");
+const RegisterInput_1 = __importDefault(require("../entities/user/register/RegisterInput"));
+const User_1 = __importDefault(require("../entities/user/User"));
 let UserResolver = class UserResolver {
     /**
      * get all users
@@ -115,7 +91,7 @@ __decorate([
     __param(0, (0, type_graphql_1.Arg)('data')),
     __param(1, (0, type_graphql_1.Ctx)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [UserCreateInput, Object]),
+    __metadata("design:paramtypes", [RegisterInput_1.default, Object]),
     __metadata("design:returntype", Promise)
 ], UserResolver.prototype, "createUser", null);
 __decorate([
