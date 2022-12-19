@@ -21,7 +21,7 @@ const main = async () => {
   app.use(
     '/graphql',
     jwt.expressjwt({
-      secret: 'TypeGraphQL',
+      secret: process.env.JWT_SECRET!,
       credentialsRequired: false,
       algorithms: ['RS256'],
     })
